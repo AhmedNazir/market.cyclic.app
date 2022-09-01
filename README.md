@@ -9,5 +9,5 @@ App URL 2: https://url-shortener.cyclic.app
 
 ### Deploy it in 7 seconds: 
 
-[![Visit]](https://url-shortener.cyclic.app)
+[[Visit]](https://url-shortener.cyclic.app/)
 
