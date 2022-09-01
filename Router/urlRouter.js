@@ -16,54 +16,21 @@ router.get("/random/number/:length", (req, res) => {
     res.status(200).json(Math.floor(Math.random() * 1000));
 });
 
+router.get("/", (req, res) => {
+    res.status(200).json({
+        status: true,
+        message: "welcome!!!",
+    });
+});
+
 router.get("/:alias", (req, res) => {
     UrlModel.findOne({ alias: req.params.alias }, (err, data) => {
         if (err) res.status(500).json({ error: { message: err.message } });
-        else
+        else {
             res.status(200).json({
                 status: true,
                 data,
             });
-    });
-});
-
-router.get("/add/:link/:alias", async (req, res) => {
-    const index = crypto
-        .createHash("sha256")
-        .update(req.params.link)
-        .digest("base64");
-    const query = {
-        index,
-    };
-
-    if (req.params.alias) query.alias = req.params.alias;
-
-    UrlModel.find(query, (err, data) => {
-        if (err) res.status(500).json({ error: { message: err.message } });
-        else {
-            if (data.length > 0)
-                res.status(200).json({ status: true, data: data[0] });
-            else {
-                const alias = req.params.alias
-                    ? req.params.alias
-                    : randomString(process.env.ALIAS_LENGTH);
-
-                const newUrl = new UrlModel({
-                    index,
-                    link: req.params.link,
-                    alias,
-                });
-
-                console.log(newUrl);
-                newUrl.save((err) => {
-                    if (err)
-                        res.status(500).json({
-                            status: false,
-                            error: { message: "alias is not available" },
-                        });
-                    else res.status(200).json({ status: true, data: newUrl });
-                });
-            }
         }
     });
 });
@@ -110,26 +77,38 @@ router.post("/", async (req, res) => {
 });
 
 router.put("/", (req, res) => {
-    UrlModel.updateOne(
+    const index = crypto
+        .createHash("sha256")
+        .update(req.body.link)
+        .digest("base64");
+
+    UrlModel.findByIdAndUpdate(
         { _id: req.body.id },
         {
             $set: {
+                index: index,
                 link: req.body.link,
-                time: Date.now(),
             },
+        },
+        {
+            new: true,
+        },
+        (err, data) => {
+            if (err) res.json({ status: false });
+            else
+                res.status(200).json({
+                    status: true,
+                    data,
+                });
         }
     );
-
-    UrlModel.findOne({ _id: req.body.id }, (err, data) => {
-        if (err) res.json({ status: false });
-        else
-            res.status(200).json({
-                status: true,
-                data,
-            });
-    });
 });
 
-router.delete("/", (req, res) => {});
+router.delete("/:id", (req, res) => {
+    UrlModel.findByIdAndDelete({ _id: req.params.id }, (err) => {
+        if (err) res.json({ status: false });
+        else res.status(200).json({ status: true });
+    });
+});
 
 module.exports = router;
