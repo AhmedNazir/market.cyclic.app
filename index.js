@@ -19,6 +19,10 @@ app.use(express.json());
 // Set View Engine
 
 // Router
+app.get("/", (req, res) => {
+    res.status(200).json({ status: true, message: "welcome" });
+});
+
 app.use("/shortener", urlRouter);
 
 // Error Section
