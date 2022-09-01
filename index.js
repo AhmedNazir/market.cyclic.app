@@ -24,6 +24,4 @@ app.use("/", urlRouter);
 // Error Section
 
 // App listening
-app.listen(process.env.PORT, () => {
-  console.log(`app is listening to http://localhost:${process.env.PORT}`);
-});
+app.listen(process.env.PORT || 3000)
