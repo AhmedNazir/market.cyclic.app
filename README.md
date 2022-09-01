@@ -7,7 +7,7 @@ App URL: https://harlequin-nightingale-vest.cyclic.app
 App URL 2: https://url-shortener.cyclic.app
 ```
 
-### Deploy it in 7 seconds: 
+### App: 
 
 [[Visit]](https://url-shortener.cyclic.app/)
 
