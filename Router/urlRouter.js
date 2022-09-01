@@ -16,8 +16,8 @@ router.get("/random/number/:length", (req, res) => {
     res.status(200).json(Math.floor(Math.random() * 1000));
 });
 
-router.get("/:id", (req, res) => {
-    UrlModel.find({ alias: req.params.id }, (err, data) => {
+router.get("/:alias", (req, res) => {
+    UrlModel.findOne({ alias: req.params.alias }, (err, data) => {
         if (err) res.status(500).json({ error: { message: err.message } });
         else
             res.status(200).json({
