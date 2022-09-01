@@ -19,7 +19,7 @@ app.use(express.json());
 // Set View Engine
 
 // Router
-app.use("/", urlRouter);
+app.use("/shortener", urlRouter);
 
 // Error Section
 
