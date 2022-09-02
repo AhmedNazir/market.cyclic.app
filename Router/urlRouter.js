@@ -2,9 +2,10 @@ const express = require("express");
 const UrlModel = require("../models/Url");
 const crypto = require("crypto");
 
-const router = express.Router();
-
 const randomString = require("../utils/app");
+const checkLogin = require("../middlewares/checkLogin");
+
+const router = express.Router();
 
 router.get("/random/string/:length", (req, res) => {
     const length = req.params.length ? req.params.length : 5;
@@ -16,7 +17,7 @@ router.get("/random/number/:length", (req, res) => {
     res.status(200).json(Math.floor(Math.random() * 1000));
 });
 
-router.get("/add", (req, res) => {
+router.get("/add", checkLogin, (req, res) => {
     const index = crypto
         .createHash("sha256")
         .update(req.query.link)
@@ -41,6 +42,7 @@ router.get("/add", (req, res) => {
                     index,
                     link: req.query.link,
                     alias,
+                    author: res.locals.username,
                 });
 
                 console.log(newUrl);
@@ -57,20 +59,60 @@ router.get("/add", (req, res) => {
     });
 });
 
-router.get("/:alias", (req, res) => {
-    UrlModel.findOne({ alias: req.params.alias },{index:0, _id:0, __v:0}, (err, data) => {
-        if (err) res.status(500).json({ error: { message: err.message } });
-        else {
-            res.status(200).json({
-                status: true,
-                data,
-            });
+router.get("/all", checkLogin, (req, res) => {
+    UrlModel.find(
+        { author: res.locals.username },
+        { index: 0, __v: 0 },
+        (error, data) => {
+            if (error)
+                res.status(500).json({
+                    error: true,
+                    message: error.message,
+                });
+            else
+                res.status(200).json({
+                    error: false,
+                    username: res.locals.username,
+                    data,
+                });
         }
-    });
+    );
+
+    // try {
+    //     const result = UrlModel.find({ author: res.locals.username }).exec();
+
+    //     res.status(200).json({
+    //         error: false,
+    //         username: res.locals.username,
+    //         data: result,
+    //     });
+    // } catch (error) {
+    //     res.status(500).json({
+    //         error: true,
+    //         message: error.message,
+    //     });
+    // }
+});
+
+router.get("/:alias", (req, res) => {
+    UrlModel.findOne(
+        { alias: req.params.alias },
+        { index: 0, _id: 0, __v: 0 },
+        (err, data) => {
+            if (err) res.status(500).json({ error: { message: err.message } });
+            else {
+                res.status(200).json({
+                    status: true,
+                    data,
+                });
+            }
+        }
+    );
 });
 
 router.get("/", (req, res) => {
-    res.render("url");
+    res.status(200).json({ error: false, message: "api working" });
+    // res.render("url");
 });
 
 router.post("/", (req, res) => {

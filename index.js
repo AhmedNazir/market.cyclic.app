@@ -7,6 +7,7 @@ const path = require("path");
 
 // Internal Files
 const urlRouter = require("./Router/urlRouter");
+const userRouter = require("./Router/userRouter");
 
 // Database connection
 mongoose
@@ -30,6 +31,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/shortener", urlRouter);
+app.use("/user", userRouter);
 
 // Error Section
 
