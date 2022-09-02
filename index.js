@@ -2,6 +2,8 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const doenv = require("dotenv").config();
+const ejs = require("ejs");
+const path = require("path");
 
 // Internal Files
 const urlRouter = require("./Router/urlRouter");
@@ -16,7 +18,11 @@ mongoose
 const app = express();
 app.use(express.json());
 
-// Set View Engine
+// set the view engine to ejs
+app.set("view engine", "ejs");
+
+// set static folder
+app.use(express.static(path.join(__dirname, "public")));
 
 // Router
 app.get("/", (req, res) => {
