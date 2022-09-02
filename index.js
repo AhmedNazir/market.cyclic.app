@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const doenv = require("dotenv").config();
 const ejs = require("ejs");
 const path = require("path");
+const cors = require("cors");
 
 // Internal Files
 const urlRouter = require("./Router/urlRouter");
@@ -18,6 +19,7 @@ mongoose
 // App module
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
