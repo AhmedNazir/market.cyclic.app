@@ -8,7 +8,7 @@ const User = require("../models/User");
 const router = express.Router();
 
 router.get("/", (req, res) => {
-    res.status(200).json({ status: true, message: "api working" });
+    res.status(200).json({ error: false, message: "api working" });
 });
 
 router.post("/login", async (req, res) => {

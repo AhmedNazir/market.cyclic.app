@@ -32,7 +32,7 @@ router.get("/add", checkLogin, (req, res) => {
         if (err) res.status(500).json({ error: { message: err.message } });
         else {
             if (data.length > 0)
-                res.status(200).json({ status: true, data: data[0] });
+                res.status(200).json({ error: false, data: data[0] });
             else {
                 const alias = req.query.alias
                     ? req.query.alias
@@ -49,10 +49,10 @@ router.get("/add", checkLogin, (req, res) => {
                 newUrl.save((err) => {
                     if (err)
                         res.status(500).json({
-                            status: false,
+                            error: true,
                             error: { message: "alias is not available" },
                         });
-                    else res.status(200).json({ status: true, data: newUrl });
+                    else res.status(200).json({ error: false, data: newUrl });
                 });
             }
         }
@@ -102,7 +102,7 @@ router.get("/:alias", (req, res) => {
             if (err) res.status(500).json({ error: { message: err.message } });
             else {
                 res.status(200).json({
-                    status: true,
+                    error: false,
                     data,
                 });
             }
@@ -130,7 +130,7 @@ router.post("/", (req, res) => {
         if (err) res.status(500).json({ error: { message: err.message } });
         else {
             if (data.length > 0)
-                res.status(200).json({ status: true, data: data[0] });
+                res.status(200).json({ error: false, data: data[0] });
             else {
                 const alias = req.body.alias
                     ? req.body.alias
@@ -146,10 +146,10 @@ router.post("/", (req, res) => {
                 newUrl.save((err) => {
                     if (err)
                         res.status(500).json({
-                            status: false,
+                            error: true,
                             error: { message: "alias is not available" },
                         });
-                    else res.status(200).json({ status: true, data: newUrl });
+                    else res.status(200).json({ error: false, data: newUrl });
                 });
             }
         }
@@ -174,10 +174,10 @@ router.put("/", (req, res) => {
             new: true,
         },
         (err, data) => {
-            if (err) res.json({ status: false });
+            if (err) res.json({ error: true });
             else
                 res.status(200).json({
-                    status: true,
+                    error: false,
                     data,
                 });
         }
@@ -186,8 +186,8 @@ router.put("/", (req, res) => {
 
 router.delete("/:id", (req, res) => {
     UrlModel.findByIdAndDelete({ _id: req.params.id }, (err) => {
-        if (err) res.json({ status: false });
-        else res.status(200).json({ status: true });
+        if (err) res.json({ error: true });
+        else res.status(200).json({ error: false });
     });
 });
 
