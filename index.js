@@ -9,6 +9,7 @@ const cors = require("cors");
 // Internal Files
 const urlRouter = require("./Router/urlRouter");
 const userRouter = require("./Router/userRouter");
+const youtubeRouter = require("./Router/youtubeRouter");
 
 // Database connection
 mongoose
@@ -34,9 +35,20 @@ app.get("/", (req, res) => {
 
 app.use("/shortener", urlRouter);
 app.use("/user", userRouter);
+app.use("/youtube", youtubeRouter);
 
 // Error Section
+app.use((req, res, next) => {
+    next("Not Found");
+});
 
+app.use((err, req, res, next) => {
+    if (res.headerSent) next("Multiple header send");
+    else {
+        const message = err.message || "there is a error";
+        res.status(500).json({ error: true, message, err });
+    }
+});
 // App listening
 app.listen(process.env.PORT, () => {
     console.log(`app is listening to http://localhost:${process.env.PORT}`);

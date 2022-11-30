@@ -22,7 +22,7 @@ try {
 
         const data = await response.json();
 
-        console.log(data.status);
+        console.log(element);
     });
 } catch (err) {
     console.error(err);
